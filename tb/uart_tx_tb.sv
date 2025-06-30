@@ -3,18 +3,13 @@ import data_types_pkg::*;
 
 module uart_tx_tb;
     // Testbench signals for uart_tx
-    logic rst;
-    logic clk;
-    logic [8:0] data;
-    logic [11:0] control;
-    logic start;
-    logic idle;
-    logic tx_out;
+    bit clk;
 
-    uart_tx uart_tx_dut(.*);
+    uart_tx_if txif(clk);
+    uart_tx uart_tx_dut(txif);
 
     ctrl_reg_t ctrl_reg;
-    assign control = ctrl_reg;
+    assign txif.control = ctrl_reg;
     
 
     initial begin
@@ -25,33 +20,33 @@ module uart_tx_tb;
     end
 
     initial begin
-        rst = 1;
+        txif.rst = 1;
         ctrl_reg.br_div = 8;
         ctrl_reg.word = 0;
         ctrl_reg.stop = 0;
         ctrl_reg.en = 1;
         #2000
-        rst = 0;
-        data = 'h8e;
-        start = 1;
+        txif.rst = 0;
+        txif.data = 'h8e;
+        txif.start = 1;
         #5000
-        start = 0;
-        wait(idle)
+        txif.start = 0;
+        wait(txif.idle)
         #400
-        data = 'h81;
-        start = 1;
+        txif.data = 'h81;
+        txif.start = 1;
         #3000
-        start = 0;
-        wait (idle)
+        txif.start = 0;
+        wait (txif.idle)
         #2000
-        start = 1;
+        txif.start = 1;
         ctrl_reg.word = 1;
-        data = 'h1fe;
+        txif.data = 'h1fe;
         #2000;
-        start = 0;
-        wait(idle)
+        txif.start = 0;
+        wait(txif.idle)
         #1000
-        start = 1;
+        txif.start = 1;
         ctrl_reg.stop = 1;
 
     end

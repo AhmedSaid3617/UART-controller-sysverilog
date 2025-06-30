@@ -1,3 +1,5 @@
+import bus_if_types_pkg::*;
+
 interface slave_bus_if(input bclk, input brst_n);
     logic [31:0] wdata, rdata;
     logic [31:0] addr;

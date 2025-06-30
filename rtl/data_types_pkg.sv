@@ -8,8 +8,8 @@ package data_types_pkg;
     typedef enum { IDLE, START, DATA, STOP } state_t;
 
     typedef struct packed {
-        logic        txe;         // Bit 13: Transmit enable (read-only)
-        logic        rxe;         // Bit 12: Receive enable (read-only)
+        logic        txf;         // Bit 13: Transmit buffer full (read-only)
+        logic        rxe;         // Bit 12: Receive buffer empty (read-only)
         logic [7:0]  br_div;      // Bits 11:3: Baud rate divisor (read/write)
         logic        word;        // Bit 2: Word length (read/write)
         logic        stop;        // Bit 1: Stop bits (read/write)
