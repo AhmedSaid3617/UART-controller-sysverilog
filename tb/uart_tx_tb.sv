@@ -1,0 +1,59 @@
+`timescale 1ns/1ps
+import data_types_pkg::*;
+
+module uart_tx_tb;
+    // Testbench signals for uart_tx
+    logic rst;
+    logic clk;
+    logic [8:0] data;
+    logic [11:0] control;
+    logic start;
+    logic idle;
+    logic tx_out;
+
+    uart_tx uart_tx_dut(.*);
+
+    ctrl_reg_t ctrl_reg;
+    assign control = ctrl_reg;
+    
+
+    initial begin
+        clk = 0;
+        for (int i = 0; i < 4000; i++) begin
+            #542.535 clk = ~clk;
+        end
+    end
+
+    initial begin
+        rst = 1;
+        ctrl_reg.br_div = 8;
+        ctrl_reg.word = 0;
+        ctrl_reg.stop = 0;
+        ctrl_reg.en = 1;
+        #2000
+        rst = 0;
+        data = 'h8e;
+        start = 1;
+        #5000
+        start = 0;
+        wait(idle)
+        #400
+        data = 'h81;
+        start = 1;
+        #3000
+        start = 0;
+        wait (idle)
+        #2000
+        start = 1;
+        ctrl_reg.word = 1;
+        data = 'h1fe;
+        #2000;
+        start = 0;
+        wait(idle)
+        #1000
+        start = 1;
+        ctrl_reg.stop = 1;
+
+    end
+
+endmodule
