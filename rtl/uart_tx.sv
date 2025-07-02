@@ -3,7 +3,7 @@ import data_types_pkg::*;
 interface uart_tx_if(input clk);
     logic rst;
     logic [8:0] data;
-    tx_config_t tx_cfg;
+    config_t tx_cfg;
     logic enable;
     logic idle;
     logic finish;

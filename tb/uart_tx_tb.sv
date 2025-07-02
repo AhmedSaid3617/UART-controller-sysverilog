@@ -8,7 +8,7 @@ module uart_tx_tb;
     uart_tx_if txif(clk);
     uart_tx uart_tx_dut(txif);
 
-    tx_config_t cfg_reg;
+    config_t cfg_reg;
     assign txif.tx_cfg = cfg_reg;
     
 

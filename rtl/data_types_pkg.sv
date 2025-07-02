@@ -21,6 +21,6 @@ package data_types_pkg;
         logic        word;        // Bit 2: Word length (read/write)
         logic        stop;        // Bit 1: Stop bits (read/write)
         logic        en;          // Bit 0: Enable (read/write)
-    } tx_config_t;
+    } config_t;
 
 endpackage : data_types_pkg
