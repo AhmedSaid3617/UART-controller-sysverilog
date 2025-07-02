@@ -8,8 +8,8 @@ module uart_tx_tb;
     uart_tx_if txif(clk);
     uart_tx uart_tx_dut(txif);
 
-    ctrl_reg_t ctrl_reg;
-    assign txif.control = ctrl_reg;
+    tx_config_t cfg_reg;
+    assign txif.tx_cfg = cfg_reg;
     
 
     initial begin
@@ -21,33 +21,33 @@ module uart_tx_tb;
 
     initial begin
         txif.rst = 1;
-        ctrl_reg.br_div = 8;
-        ctrl_reg.word = 0;
-        ctrl_reg.stop = 0;
-        ctrl_reg.en = 1;
+        cfg_reg.br_div = 8;
+        cfg_reg.word = 0;
+        cfg_reg.stop = 0;
+        cfg_reg.en = 1;
         #2000
         txif.rst = 0;
         txif.data = 'h8e;
-        txif.start = 1;
+        txif.enable = 1;
         #5000
-        txif.start = 0;
+        txif.enable = 0;
         wait(txif.idle)
         #400
         txif.data = 'h81;
-        txif.start = 1;
+        txif.enable = 1;
         #3000
-        txif.start = 0;
+        txif.enable = 0;
         wait (txif.idle)
         #2000
-        txif.start = 1;
-        ctrl_reg.word = 1;
+        txif.enable = 1;
+        cfg_reg.word = 1;
         txif.data = 'h1fe;
         #2000;
-        txif.start = 0;
+        txif.enable = 0;
         wait(txif.idle)
         #1000
-        txif.start = 1;
-        ctrl_reg.stop = 1;
+        txif.enable = 1;
+        cfg_reg.stop = 1;
 
     end
 

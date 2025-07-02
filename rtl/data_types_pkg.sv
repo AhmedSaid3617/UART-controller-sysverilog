@@ -8,12 +8,19 @@ package data_types_pkg;
     typedef enum { IDLE, START, DATA, STOP } state_t;
 
     typedef struct packed {
-        logic        txf;         // Bit 13: Transmit buffer full (read-only)
-        logic        rxe;         // Bit 12: Receive buffer empty (read-only)
-        logic [7:0]  br_div;      // Bits 11:3: Baud rate divisor (read/write)
+        logic        txf;         // Bit 12: Transmit buffer full (read-only)
+        logic        rxe;         // Bit 11: Receive buffer empty (read-only)
+        logic [7:0]  br_div;      // Bits 10:3: Baud rate divisor (read/write)
         logic        word;        // Bit 2: Word length (read/write)
         logic        stop;        // Bit 1: Stop bits (read/write)
         logic        en;          // Bit 0: Enable (read/write)
     } ctrl_reg_t;
+
+    typedef struct packed {
+        logic [7:0]  br_div;      // Bits 10:3: Baud rate divisor (read/write)
+        logic        word;        // Bit 2: Word length (read/write)
+        logic        stop;        // Bit 1: Stop bits (read/write)
+        logic        en;          // Bit 0: Enable (read/write)
+    } tx_config_t;
 
 endpackage : data_types_pkg
