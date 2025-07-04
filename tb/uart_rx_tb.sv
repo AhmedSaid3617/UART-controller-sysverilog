@@ -30,9 +30,6 @@ module uart_rx_tb;
         #5000
         tx_if.enable = 0;
         wait(tx_if.idle);
-        /* rx_if.rst = 1;
-        #2000
-        rx_if.rst = 0; */
         #5000
         tx_if.data = 'h81;
         tx_if.enable = 1;

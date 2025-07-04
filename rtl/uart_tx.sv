@@ -16,8 +16,6 @@ module uart_tx (
 
     state_t state, next_state;
     logic [8:0] tx_buff;
-    /* ctrl_reg_t control_buff;
-    assign control_buff = txif.control; */
 
     logic [3:0] d_count;
     logic [3:0] w_size;

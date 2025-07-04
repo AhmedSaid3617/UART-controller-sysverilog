@@ -16,7 +16,6 @@ module uart_rx (uart_rx_if rx_if);
 
     baud_gen br_gen(rx_if.clk, br_rst, rx_if.rx_cfg.br_div, br_tick);
 
-    //assign rx_filter_if.rst = rx_if.rst;
     assign rx_filter_if.sample_tick = br_tick;
     assign rx_filter_if.sig_in = rx_if.rx_in;
 
@@ -28,13 +27,14 @@ module uart_rx (uart_rx_if rx_if);
     always_ff @(posedge rx_if.clk) begin
         if (rx_if.rst) begin
             state <=  IDLE;
+            rx_if.finish <= 0;
             d_count <= 0;
             w_size <= rx_if.rx_cfg.word?8:7;
             s_count <= rx_if.rx_cfg.stop;
-            //rx_if.data_out <= 0;
         end
         else begin
             case (state)
+                IDLE: rx_if.finish <= 0;
                 START: if (br_tick)begin
                     rx_buff[d_count] <= rx_if.rx_in;
                     d_count <= d_count + 1;
@@ -48,17 +48,13 @@ module uart_rx (uart_rx_if rx_if);
                 STOP: begin
                     if (br_tick) begin
                         rx_if.data_out <= rx_buff;
+                        rx_if.finish <= 1;
                         rx_buff <= 0;
                         d_count <= 0;
                         if (next_state == STOP) s_count <= 0;
                     end
                     
                 end
-                /* SAVE: begin
-                    rx_if.data_out <= rx_buff;
-                    rx_buff <= 0;
-                    d_count <= 0;
-                end */
             endcase
             state <= next_state;
         end
@@ -80,10 +76,10 @@ module uart_rx (uart_rx_if rx_if);
 
             DATA: if (d_count == w_size && br_tick) next_state = STOP;
 
-            STOP: if (!s_count && br_tick) next_state = IDLE;
+            STOP: begin
+                if (!s_count && br_tick) next_state = IDLE; 
+            end
             
-            //SAVE: next_state = IDLE;
-
             ERROR: next_state = IDLE;
         endcase
     end

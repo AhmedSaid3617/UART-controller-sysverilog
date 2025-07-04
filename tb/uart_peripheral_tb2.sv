@@ -1,7 +1,7 @@
 import bus_if_types_pkg::*;
 import data_types_pkg::*;
 
-module uart_periph_tb;
+module uart_periph_tb_2;
     logic clk, bnrst;
     slave_bus_if bus(clk, bnrst);
     uart_mod_if uart_if(clk);
@@ -9,8 +9,7 @@ module uart_periph_tb;
     uart_controller uart_dut(bus.slave, uart_if.uart_mp);
 
     ctrl_reg_t control_reg_in;
-    ctrl_reg_t control_reg_out;
-    
+
     assign uart_if.rx = uart_if.tx;
 
     initial begin
@@ -23,7 +22,7 @@ module uart_periph_tb;
     initial begin
         bnrst = 0;
         uart_if.rst = 1;
-        #2000
+        #1000
         uart_if.rst = 0;
         bnrst = 1;
         bus.ss = 1;
@@ -49,10 +48,6 @@ module uart_periph_tb;
         bus.addr = 8'h04;
 
         #100000
-
-        bus.ttype = READ;
-        bus.addr = 8'h00;
-        #2000
         bus.ttype = WRITE;
         bus.addr = 8'h00;
         bus.wdata = 8'hf0;
@@ -60,5 +55,6 @@ module uart_periph_tb;
         bus.ss = 0;
 
     end
+
 
 endmodule
