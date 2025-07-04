@@ -20,6 +20,7 @@ module uart_tx (
     assign control_buff = txif.control; */
 
     logic [3:0] d_count;
+    logic [3:0] w_size;
     logic s_count;
     logic br_tick, br_rst;
 
@@ -39,15 +40,16 @@ module uart_tx (
             case (state)
                 IDLE: if (next_state == START) begin
                     tx_buff <= txif.data;
-                    d_count <= txif.tx_cfg.word ? 8 : 7;
+                    d_count <= 0;
+                    w_size <= txif.tx_cfg.word ? 8 : 7;
                     s_count <= txif.tx_cfg.stop;
                 end
-                DATA: if (next_state == DATA && br_tick) d_count <= d_count - 1;
+                DATA: if (next_state == DATA && br_tick) d_count <= d_count + 1;
                 STOP: begin 
                     if (next_state == STOP && br_tick) s_count <= 0;
                     if (next_state == START) begin
                         tx_buff <= txif.data;
-                        d_count <= txif.tx_cfg.word ? 8 : 7;
+                        d_count <= 0;
                         s_count <= txif.tx_cfg.stop;
                     end
                 end
@@ -69,7 +71,7 @@ module uart_tx (
             end
             DATA: begin
                 txif.tx_out = tx_buff[d_count];
-                if (!d_count & br_tick) next_state = STOP;
+                if (d_count == w_size  & br_tick) next_state = STOP;
             end
             STOP: begin
                 txif.tx_out = 1;

@@ -5,7 +5,7 @@ package data_types_pkg;
     typedef logic [15:0] word_t;
     typedef logic [31:0] dword_t;
 
-    typedef enum { IDLE, START, DATA, STOP } state_t;
+    typedef enum { IDLE, START, DATA, STOP, WAIT, ERROR } state_t;
 
     typedef struct packed {
         logic        txf;         // Bit 12: Transmit buffer full (read-only)

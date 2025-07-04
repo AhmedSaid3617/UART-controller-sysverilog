@@ -1,13 +1,13 @@
 interface sampler_if(input clk);
-    logic rst, filtered, sig_in, sample_tick;
+    logic rst, sig_in, sample_tick, sig_out;
 
     modport sampler_mp (
         input clk, rst, sig_in, sample_tick,
-        output filtered
+        output sig_out
     );
 
     modport tb_mp (
-        input filtered,
+        input sig_out,
         output rst, sig_in, sample_tick
     );
 endinterface
@@ -26,7 +26,7 @@ module sampler (sampler_if.sampler_mp ifc);
             else low <= low+1;
 
             if (ifc.sample_tick) begin
-               ifc.filtered <= (high > low)?1:0;
+               ifc.sig_out <= (high > low)?1:0;
                high <= 0;
                low <= 0; 
             end
